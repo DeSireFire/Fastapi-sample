@@ -11,15 +11,7 @@ __author__ = 'RaXianch'
 import sys
 from redis import Redis, AuthenticationError
 
-from common.logger import logger
-from core.config import settings
 
-REDIS_HOST = '192.168.50.122'
-REDIS_PORT = 6380
-REDIS_PASSWORD = ''
-REDIS_DB = 15
-REDIS_TIMEOUT = 888
-PROXY_IP_URL = f'redis://{REDIS_HOST}:{REDIS_PORT}/1'  # 代理ip所在的库
 
 
 class RedisCli(object):
@@ -48,10 +40,10 @@ class RedisCli(object):
                 decode_responses=True  # 解码
             )
             if not self._redis_client.ping():
-                logger.info("连接redis超时")
+                print("连接redis超时")
                 sys.exit()
         except (AuthenticationError, Exception) as e:
-            logger.info(f"连接redis异常 {e}")
+            print(f"连接redis异常 {e}")
             sys.exit()
 
     # 使实例化后的对象 赋予redis对象的的方法和属性
@@ -69,14 +61,7 @@ class RedisCli(object):
 
 
 # 创建redis连接对象
-# Redis_cli = RedisCli(
-#     host=settings.REDIS_HOST,
-#     port=settings.REDIS_PORT,
-#     password=settings.REDIS_PASSWORD,
-#     db=settings.REDIS_DB,
-#     socket_timeout=settings.REDIS_TIMEOUT
-# )
-# 创建redis连接对象
+from .setting import *
 # redis_client: Redis = RedisCli(
 Redis_cli = RedisCli(
     host=REDIS_HOST,

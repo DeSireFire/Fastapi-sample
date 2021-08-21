@@ -78,7 +78,7 @@ async def test_redis(request: Request,
         "list": redis_client.lpush,
         "set": redis_client.sadd,
     }
-    status = redis_mode[m](k, v, ex=-1)
+    status = redis_mode[m](k, v)
     return {"msg": {k: status}}
 
 
