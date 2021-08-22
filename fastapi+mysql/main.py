@@ -10,7 +10,7 @@ __author__ = 'RaXianch'
 # 导入FastAPI模块
 from fastapi import FastAPI
 from dbApi.model import CreatUser, User, session, AlterUser
-
+from sqlalchemy.exc import IntegrityError
 # 创建app实例
 app = FastAPI()
 
@@ -22,14 +22,18 @@ async def InserUser(user: CreatUser):
         dataUser = User(userid=user.userid, username=user.username)
         session.add(dataUser)
         session.commit()
-        session.close()
     except ArithmeticError:
+        session.rollback()
         return {"code": "0002", "message": "数据库异常"}
+    except IntegrityError:
+        session.rollback()
+        return {"code": "0002", "message": "数据重复"}
+    finally:
+        session.close()
     return {"code": "0000", "message": "添加成功"}
 
 
 from typing import List
-
 
 ## 添加多个
 @app.post("/user/addUserList")
